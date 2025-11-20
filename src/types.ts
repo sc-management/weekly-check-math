@@ -11,10 +11,10 @@ export interface LocationWeeklyRaw {
   weekStartDate: string;
 
   // --- Revenue & cash ---
-  totalRevenue: MoneyCents;
+  totalRevenueAmount: MoneyCents;
 
-  weeklyCashClover: MoneyCents;
-  actualDeposit: MoneyCents;
+  weeklyCashCloverAmount: MoneyCents;
+  actualDepositAmount: MoneyCents;
 
   voidsAmount: MoneyCents;
   discountsAmount: MoneyCents;
@@ -25,18 +25,18 @@ export interface LocationWeeklyRaw {
   hoursOpen: number | null;
 
   // --- Tips & labor ---
-  totalTips: MoneyCents;
-  fohLabor: MoneyCents;
-  bohLabor: MoneyCents;
+  totalTipsAmount: MoneyCents;
+  fohLaborAmount: MoneyCents;
+  bohLaborAmount: MoneyCents;
 
   // Online / other income（可选）
-  onlineSalesClover?: MoneyCents;
-  onlineSalesActual: MoneyCents;
-  ghostKitchenIncome?: MoneyCents;
+  onlineSalesCloverAmount?: MoneyCents;
+  onlineSalesActualAmount: MoneyCents;
+  ghostKitchenIncomeAmount?: MoneyCents;
 }
 
 /**
- * 采购记录（按Vendor分）
+ * 采购记录（按Vendor分，每周汇总，不需要聚合）
  */
 export interface InventoryPurchaseRaw {
   locationId: string;
@@ -46,19 +46,6 @@ export interface InventoryPurchaseRaw {
   vendorName: string;
 
   amount: MoneyCents;
-}
-
-/**
- * 用于把多家 vendor / 多种 category 汇总成表格列的配置
- * 例如：gordon / seafood / usFood / oto / localOther...
- */
-export interface InventoryGroupConfig {
-  /** 唯一 key，用于前端识别列 */
-  key: string;
-  /** 列标题展示用 */
-  label: string;
-  /** 匹配 vendorId */
-  vendorIds?: string[];
 }
 
 /**
@@ -76,7 +63,7 @@ export interface LocationInventorySummary {
   }[];
 
   /** 食材相关成本 */
-  foodCost: MoneyCents;
+  foodCostAmount: MoneyCents;
 }
 
 /**
@@ -91,6 +78,18 @@ export interface LocationWeeklyMetrics extends LocationWeeklyRaw {
   // 折扣 / voids
   discountVoidsPercent: Percentage; // (discountsAmount + voidsAmount) / totalRevenue
 
+  // Inventory
+  inventorySummary: LocationInventorySummary;
+  adjustedSalesAmount: MoneyCents; // totalRevenue - (onlineSalesActual * 0.2)
+  inventoryPurchasesPercent: Percentage; // foodCost / adjustedSalesAmount
+
   // Online sales
   onlineSalesPercent: Percentage; // onlineSalesActual / totalRevenue
+}
+
+/** Weekly Check 整体输出 */
+export interface WeeklyCheckingSummary {
+  rows: LocationWeeklyMetrics[];
+  total: LocationWeeklyMetrics;
+  average: LocationWeeklyMetrics;
 }
