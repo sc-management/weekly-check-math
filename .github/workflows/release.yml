@@ -7,6 +7,7 @@ on:
     # 可选：只有版本号变更时才触发
     tags:
       - 'v*.*.*'
+  workflow_dispatch:
 
 permissions:
   contents: read
