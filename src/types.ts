@@ -1,6 +1,23 @@
 export type MoneyCents = number; // 金额，单位为分
 export type Percentage = number; // 百分比，0..1 之间的小数
 
+export type LocationWeeklyField =
+  | 'totalRevenueAmount'
+  | 'weeklyCashCloverAmount'
+  | 'actualDepositAmount'
+  | 'voidsAmount'
+  | 'discountsAmount'
+  | 'refundsAmount'
+  | 'seats'
+  | 'hoursOpen'
+  | 'totalTipsAmount'
+  | 'fohLaborAmount'
+  | 'bohLaborAmount'
+  | 'onlineSalesCloverAmount'
+  | 'onlineSalesActualAmount'
+  | 'ghostKitchenIncomeAmount';
+export type InventoryPurchaseField = 'amount';
+
 /**
  * 单店单周期的“原始事实数据”
  * 这些一般都来自 DB / 外部系统，不在本包里修改
@@ -93,3 +110,27 @@ export interface WeeklyCheckingSummary {
   total: LocationWeeklyMetrics;
   average: LocationWeeklyMetrics;
 }
+
+export type WeeklyChange =
+  | ({ kind: 'location-raw' } & LocationWeeklyUpdate)
+  | ({ kind: 'inventory-purchase' } & InventoryPurchaseUpdate);
+
+export type LocationWeeklyUpdate = {
+  locationId: string;
+
+  field: LocationWeeklyField;
+  value: MoneyCents | null;
+};
+
+export type InventoryPurchaseUpdate = {
+  locationId: string;
+  vendorId: string;
+  vendorName?: string;
+
+  field: InventoryPurchaseField;
+  value: MoneyCents | null;
+};
+
+export type ApplyChangeResult = {
+  next: WeeklyCheckingSummary;
+};

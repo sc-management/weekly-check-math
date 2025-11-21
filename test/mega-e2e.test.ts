@@ -1,7 +1,12 @@
 // mega-e2e.test.ts
 import { describe, it, expect } from 'vitest';
 
-import { summarizeInventoryForLocation } from '../src';
+import {
+  applyChanges,
+  summarizeInventoryForLocation,
+  WeeklyChange,
+  WeeklyCheckingSummary,
+} from '../src';
 import { computeLocationWeeklyMetrics } from '../src';
 import { summarizeWeeklyChecking } from '../src';
 import { InventoryPurchaseRaw, LocationWeeklyRaw } from '../src';
@@ -184,5 +189,72 @@ describe('weekly-check-math mega E2E (Newton + Quincy)', () => {
     expect(summary.average.inventorySummary.foodCostAmount).toBe(
       Math.round(totalInv.foodCostAmount / 2),
     );
+
+    // ===============================
+    // 6. 通过 applyChanges 测试对指标的动态更新
+    // ===============================
+
+    // 假设运营方想把 Newton 的 revenue 从 15775 改成 20000
+    const change1: WeeklyChange = {
+      kind: 'location-raw',
+      locationId: 'Newton',
+      field: 'totalRevenueAmount',
+      value: 20_000,
+    };
+
+    // 再把 Quincy 的 gordon 采购多记 100
+    const change2: WeeklyChange = {
+      kind: 'inventory-purchase',
+      locationId: 'Quincy',
+      vendorId: 'gordon',
+      field: 'amount',
+      value: 4_825 + 100,
+      vendorName: 'Gordon', // 更新 amount 时不会改 label
+    };
+
+    const initialSummary: WeeklyCheckingSummary = {
+      rows: metrics, // 上面算好的两家店 metrics
+      total: summary.total,
+      average: summary.average,
+    };
+
+    const { next } = applyChanges(initialSummary, [change1, change2]);
+
+    // ========== Newton 改 revenue 后，labor% / discount% / inventory% 应该自动变化 ==========
+    const newNewton = next.rows.find((m) => m.locationId === 'Newton')!;
+    expect(newNewton.totalRevenueAmount).toBe(20_000);
+
+    // Newton 的 labor% 在 revenue 变大后应变小
+    expect(newNewton.totalLaborPercent).toBeLessThan(
+      metrics.find((m) => m.locationId === 'Newton')!.totalLaborPercent,
+    );
+
+    // Newton 的 inventory% 也会变化（purchase 不变，denominator 变大 → 百分比变小）
+    expect(newNewton.inventoryPurchasesPercent).toBeLessThan(
+      metrics.find((m) => m.locationId === 'Newton')!.inventoryPurchasesPercent,
+    );
+
+    // ========== Quincy 的 gordon 更新 amount（+100）应该反映到 summary total ==========
+    const newQuincy = next.rows.find((m) => m.locationId === 'Quincy')!;
+    const updatedGroup = newQuincy.inventorySummary.groups.find((g) => g.key === 'gordon')!;
+    expect(updatedGroup.amount).toBe(4_825 + 100);
+
+    // total 行要包含更新后的采购金额
+    const newTotal = next.total.inventorySummary;
+    const gordonInTotal = newTotal.groups.find((g) => g.key === 'gordon')!;
+    expect(gordonInTotal.amount).toBe(
+      // Newton + Quincy(gordon updated)
+      4_769 + (4_825 + 100),
+    );
+
+    // foodCostAmount 也必须反映采购合计变化
+    expect(newTotal.foodCostAmount).toBe(
+      // Newton: 4769 + 4747 = 9516
+      // Quincy: (4825+100) + 6540 = 11465
+      9_516 + 11_465,
+    );
+
+    // average 也随 total 更新
+    expect(next.average.inventorySummary.foodCostAmount).toBe(Math.round((9_516 + 11_465) / 2));
   });
 });
