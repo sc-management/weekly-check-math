@@ -47,7 +47,7 @@ vi.mock('../src/summarize-weekly-checking', () => ({
 import { summarizeInventoryForLocation } from '../src';
 import { computeLocationWeeklyMetrics } from '../src';
 import { summarizeWeeklyChecking } from '../src';
-import { applyChanges } from '../src';
+import { applyWeeklyCheckChanges } from '../src';
 
 const summarizeInventoryForLocationMock = summarizeInventoryForLocation as ReturnType<typeof vi.fn>;
 const computeLocationWeeklyMetricsMock = computeLocationWeeklyMetrics as ReturnType<typeof vi.fn>;
@@ -119,7 +119,7 @@ describe('applyChanges', () => {
       },
     ];
 
-    const result = applyChanges(current, changes);
+    const result = applyWeeklyCheckChanges(current, changes);
 
     // 1️⃣ location-raw 字段被更新
     expect(result.next.rows[0].totalRevenueAmount).toBe(200_00);
@@ -174,7 +174,7 @@ describe('applyChanges', () => {
       },
     ];
 
-    const result = applyChanges(current, changes);
+    const result = applyWeeklyCheckChanges(current, changes);
     const loc = result.next.rows[0];
 
     const groups = loc.inventorySummary.groups;

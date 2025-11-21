@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest';
 
 import {
-  applyChanges,
+  applyWeeklyCheckChanges,
   summarizeInventoryForLocation,
   WeeklyChange,
   WeeklyCheckingSummary,
@@ -218,7 +218,7 @@ describe('weekly-check-math mega E2E (Newton + Quincy)', () => {
       average: summary.average,
     };
 
-    const { next } = applyChanges(initialSummary, [change1, change2]);
+    const { next } = applyWeeklyCheckChanges(initialSummary, [change1, change2]);
 
     // ========== Newton 改 revenue 后，labor% / discount% / inventory% 应该自动变化 ==========
     const newNewton = next.rows.find((m) => m.locationId === 'Newton')!;

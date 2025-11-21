@@ -9,7 +9,7 @@ import { summarizeInventoryForLocation } from './inventory';
 import { computeLocationWeeklyMetrics } from './location-metrics';
 import { summarizeWeeklyChecking } from './summarize-weekly-checking';
 
-export function applyChanges(
+export function applyWeeklyCheckChanges(
   current: WeeklyCheckingSummary,
   changes: WeeklyChange[],
 ): ApplyChangeResult {
