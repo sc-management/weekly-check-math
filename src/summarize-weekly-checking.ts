@@ -1,10 +1,18 @@
-import { LocationWeeklyMetrics, WeeklyCheckingSummary, LocationInventorySummary } from './types';
+import {
+  LocationWeeklyMetrics,
+  WeeklyCheckingSummary,
+  LocationInventorySummary,
+  WeeklyChangeLog,
+} from './types';
 import { percent, round, safeDivide, sum } from './utils';
 
 /**
  * 入口方法：给定 rows，自动生成 total + average
  */
-export function summarizeWeeklyChecking(rows: LocationWeeklyMetrics[]): WeeklyCheckingSummary {
+export function summarizeWeeklyChecking(
+  rows: LocationWeeklyMetrics[],
+  logs: WeeklyChangeLog[],
+): WeeklyCheckingSummary {
   const total = computeTotal(rows);
   const average = computeAverage(total, rows.length);
 
@@ -12,6 +20,7 @@ export function summarizeWeeklyChecking(rows: LocationWeeklyMetrics[]): WeeklyCh
     rows,
     total,
     average,
+    logs,
   };
 }
 

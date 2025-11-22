@@ -18,12 +18,15 @@ export type LocationWeeklyField =
   | 'ghostKitchenIncomeAmount';
 export type InventoryPurchaseField = 'amount';
 
+export type WeeklyLogKind = 'LOCATION' | 'INVENTORY';
+
 /**
  * 单店单周期的“原始事实数据”
  * 这些一般都来自 DB / 外部系统，不在本包里修改
  */
 export interface LocationWeeklyRaw {
   locationId: string;
+  locationName: string;
   /** ISO 日期字符串，例如 2024-11-11 */
   weekStartDate: string;
 
@@ -109,6 +112,7 @@ export interface WeeklyCheckingSummary {
   rows: LocationWeeklyMetrics[];
   total: LocationWeeklyMetrics;
   average: LocationWeeklyMetrics;
+  logs: WeeklyChangeLog[];
 }
 
 export type WeeklyChange =
@@ -130,6 +134,25 @@ export type InventoryPurchaseUpdate = {
   field: InventoryPurchaseField;
   value: MoneyCents | null;
 };
+
+export interface WeeklyChangeLog {
+  id: string;
+  kind: WeeklyLogKind;
+
+  // 对应 location or purchase 的 ID
+  targetId: string; // weekly_location_id or weekly_purchase_id
+
+  // 方便做跳转：locationId / vendorId 等可以冗余带一下
+  locationId: string;
+  vendorId?: string;
+
+  operatorUid: string | null;
+  operatorName?: string | null;
+
+  // 你现在的 update_data，建议用 JSON 存 before/after/field
+  updateData: unknown;
+  timestamp: string; // ISO
+}
 
 export type ApplyChangeResult = {
   next: WeeklyCheckingSummary;

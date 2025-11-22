@@ -51,7 +51,7 @@ export function applyWeeklyCheckChanges(
 
       draft.rows[i] = computeLocationWeeklyMetrics(loc, newInventorySummary);
     }
-    const summary = summarizeWeeklyChecking(draft.rows);
+    const summary = summarizeWeeklyChecking(draft.rows, draft.logs);
     draft.rows = summary.rows;
     draft.total = summary.total;
     draft.average = summary.average;
