@@ -143,7 +143,7 @@ export interface WeeklyChangeLog {
   targetId: string; // weekly_location_id or weekly_purchase_id
 
   // 方便做跳转：locationId / vendorId 等可以冗余带一下
-  locationId: string;
+  locationId?: string;
   vendorId?: string;
 
   operatorUid: string | null;
