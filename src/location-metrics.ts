@@ -26,11 +26,12 @@ export function computeLocationWeeklyMetrics(
 
   // 计算adjustedSalesAmount
   const onlineSalesActual = raw.onlineSalesActualAmount || 0;
+  const onlineSalesClover = raw.onlineSalesCloverAmount || 0;
   const adjustedSalesAmount = round(totalRevenue - onlineSalesActual * 0.2, 0);
   const inventoryPurchasesPct = percent(foodCost, adjustedSalesAmount);
 
   // 计算onlineSalesPercent
-  const onlineSalesPct = percent(onlineSalesActual, totalRevenue);
+  const onlineSalesPct = percent(onlineSalesActual || onlineSalesClover, totalRevenue);
 
   return {
     ...raw,
