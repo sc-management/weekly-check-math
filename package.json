@@ -1,6 +1,6 @@
 {
   "name": "@shaking-crab/weekly-check-math",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Pure weekly check calculation for Shaking Crab",
   "license": "MIT",
   "author": "Yihui Liu",
