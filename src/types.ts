@@ -15,7 +15,9 @@ export type LocationWeeklyField =
   | 'bohLaborAmount'
   | 'onlineSalesCloverAmount'
   | 'onlineSalesActualAmount'
-  | 'ghostKitchenIncomeAmount';
+  | 'ghostKitchenIncomeAmount'
+  | 'cloverRevenueAmount'
+  | 'thirdPartyRevenueAmount';
 export type InventoryPurchaseField = 'amount';
 
 export type WeeklyLogKind = 'LOCATION' | 'INVENTORY';
@@ -53,6 +55,8 @@ export interface LocationWeeklyRaw {
   onlineSalesCloverAmount?: MoneyCents;
   onlineSalesActualAmount: MoneyCents;
   ghostKitchenIncomeAmount?: MoneyCents;
+  cloverRevenueAmount?: MoneyCents;
+  thirdPartyRevenueAmount?: MoneyCents;
 }
 
 /**

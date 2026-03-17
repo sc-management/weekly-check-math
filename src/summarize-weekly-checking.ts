@@ -62,6 +62,8 @@ export function computeTotal(rows: LocationWeeklyMetrics[]): LocationWeeklyMetri
     onlineSalesCloverAmount: sumByKey('onlineSalesCloverAmount'),
     onlineSalesActualAmount: sumByKey('onlineSalesActualAmount'),
     ghostKitchenIncomeAmount: sumByKey('ghostKitchenIncomeAmount'),
+    cloverRevenueAmount: sum(rows.map((r) => r.cloverRevenueAmount ?? 0)),
+    thirdPartyRevenueAmount: sum(rows.map((r) => r.thirdPartyRevenueAmount ?? 0)),
 
     // computed
     adjustedSalesAmount: sumByKey('adjustedSalesAmount'),
@@ -103,6 +105,8 @@ export function computeAverage(total: LocationWeeklyMetrics, count: number): Loc
     onlineSalesCloverAmount: div(total.onlineSalesCloverAmount || 0),
     onlineSalesActualAmount: div(total.onlineSalesActualAmount),
     ghostKitchenIncomeAmount: div(total.ghostKitchenIncomeAmount || 0),
+    cloverRevenueAmount: div(total.cloverRevenueAmount ?? 0),
+    thirdPartyRevenueAmount: div(total.thirdPartyRevenueAmount ?? 0),
 
     // computed
     adjustedSalesAmount: div(total.adjustedSalesAmount),
