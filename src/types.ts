@@ -52,8 +52,9 @@ export interface LocationWeeklyRaw {
   onlineSalesCloverAmount?: MoneyCents;
   onlineSalesActualAmount: MoneyCents;
   ghostKitchenIncomeAmount?: MoneyCents;
-  cloverRevenueAmount: MoneyCents;
-  thirdPartyRevenueAmount: MoneyCents;
+  totalRevenueAmount?: MoneyCents;
+  cloverRevenueAmount?: MoneyCents;
+  thirdPartyRevenueAmount?: MoneyCents;
 }
 
 /**
@@ -91,7 +92,7 @@ export interface LocationInventorySummary {
  * 单店完整指标（原始数据 + 派生字段）
  */
 export interface LocationWeeklyMetrics extends LocationWeeklyRaw {
-  // Revenue (computed: cloverRevenue + thirdPartyRevenue)
+  // Revenue (raw.totalRevenueAmount ?? cloverRevenue + thirdPartyRevenue)
   totalRevenueAmount: MoneyCents;
 
   // Labor

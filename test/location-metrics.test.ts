@@ -88,4 +88,30 @@ describe('computeLocationWeeklyMetrics (Newton from Excel)', () => {
 
     expect(result.onlineSalesPercent).toBeCloseTo(0, 8); // Newton 这一列是 0%
   });
+
+  it('should fall back to totalRevenueAmount when clover/thirdParty are missing (legacy data)', () => {
+    const rawLegacy = {
+      locationId: 'Legacy',
+      weekStartDate: '2024-11-10',
+      totalRevenueAmount: 15775,
+      // no cloverRevenueAmount or thirdPartyRevenueAmount
+      fohLaborAmount: 2380,
+      bohLaborAmount: 2346,
+      discountsAmount: 166,
+      voidsAmount: 0,
+      onlineSalesActualAmount: 0,
+    } as LocationWeeklyRaw;
+
+    const inventory: LocationInventorySummary = {
+      locationId: 'Legacy',
+      weekStartDate: '2024-11-10',
+      groups: [{ key: 'gordon', label: 'Gordon', amount: 4769 }],
+      foodCostAmount: 4769,
+    };
+
+    const result = computeLocationWeeklyMetrics(rawLegacy, inventory);
+
+    expect(result.totalRevenueAmount).toBe(15775);
+    expect(result.totalLaborPercent).toBeCloseTo(percent(2380 + 2346, 15775), 8);
+  });
 });

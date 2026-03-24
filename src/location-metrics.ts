@@ -14,7 +14,10 @@ export function computeLocationWeeklyMetrics(
 
   const foodCost = inventory.foodCostAmount;
 
-  const totalRevenue = raw.cloverRevenueAmount + raw.thirdPartyRevenueAmount;
+  const hasCloverOrThirdParty = raw.cloverRevenueAmount != null || raw.thirdPartyRevenueAmount != null;
+  const totalRevenue = hasCloverOrThirdParty
+    ? (raw.cloverRevenueAmount ?? 0) + (raw.thirdPartyRevenueAmount ?? 0)
+    : (raw.totalRevenueAmount ?? 0);
 
   // percent函数返回的是小数形式的百分比，例如0.1234表示12.34%
   // 内部有调用safeDivide，分母为0时返回0

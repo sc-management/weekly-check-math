@@ -61,9 +61,9 @@ export function computeTotal(rows: LocationWeeklyMetrics[]): LocationWeeklyMetri
     onlineSalesCloverAmount: sumByKey('onlineSalesCloverAmount'),
     onlineSalesActualAmount: sumByKey('onlineSalesActualAmount'),
     ghostKitchenIncomeAmount: sumByKey('ghostKitchenIncomeAmount'),
-    cloverRevenueAmount: sum(rows.map((r) => r.cloverRevenueAmount)),
-    thirdPartyRevenueAmount: sum(rows.map((r) => r.thirdPartyRevenueAmount)),
-    totalRevenueAmount: sum(rows.map((r) => r.cloverRevenueAmount)) + sum(rows.map((r) => r.thirdPartyRevenueAmount)),
+    cloverRevenueAmount: sumByKey('cloverRevenueAmount'),
+    thirdPartyRevenueAmount: sumByKey('thirdPartyRevenueAmount'),
+    totalRevenueAmount: sumByKey('totalRevenueAmount'),
 
     // computed
     adjustedSalesAmount: sumByKey('adjustedSalesAmount'),
