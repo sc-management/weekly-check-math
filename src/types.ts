@@ -2,7 +2,6 @@ export type MoneyCents = number; // 金额，单位为分
 export type Percentage = number; // 百分比，0..1 之间的小数
 
 export type LocationWeeklyField =
-  | 'totalRevenueAmount'
   | 'weeklyCashCloverAmount'
   | 'actualDepositAmount'
   | 'voidsAmount'
@@ -33,8 +32,6 @@ export interface LocationWeeklyRaw {
   weekStartDate: string;
 
   // --- Revenue & cash ---
-  totalRevenueAmount: MoneyCents;
-
   weeklyCashCloverAmount: MoneyCents;
   actualDepositAmount: MoneyCents;
 
@@ -55,8 +52,8 @@ export interface LocationWeeklyRaw {
   onlineSalesCloverAmount?: MoneyCents;
   onlineSalesActualAmount: MoneyCents;
   ghostKitchenIncomeAmount?: MoneyCents;
-  cloverRevenueAmount?: MoneyCents;
-  thirdPartyRevenueAmount?: MoneyCents;
+  cloverRevenueAmount: MoneyCents;
+  thirdPartyRevenueAmount: MoneyCents;
 }
 
 /**
@@ -94,6 +91,9 @@ export interface LocationInventorySummary {
  * 单店完整指标（原始数据 + 派生字段）
  */
 export interface LocationWeeklyMetrics extends LocationWeeklyRaw {
+  // Revenue (computed: cloverRevenue + thirdPartyRevenue)
+  totalRevenueAmount: MoneyCents;
+
   // Labor
   fohLaborPercent: Percentage; // fohLabor / totalRevenue
   bohLaborPercent: Percentage; // bohLabor / totalRevenue

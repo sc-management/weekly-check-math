@@ -12,7 +12,8 @@ describe('computeLocationWeeklyMetrics (Newton from Excel)', () => {
       weekStartDate: '2024-11-10',
 
       // Revenue & labor
-      totalRevenueAmount: 15775,
+      cloverRevenueAmount: 15775,
+      thirdPartyRevenueAmount: 0,
       fohLaborAmount: 2380,
       bohLaborAmount: 2346,
 
@@ -37,7 +38,7 @@ describe('computeLocationWeeklyMetrics (Newton from Excel)', () => {
 
     const result = computeLocationWeeklyMetrics(rawNewton, inventoryNewton);
 
-    const totalRevenue = rawNewton.totalRevenueAmount;
+    const totalRevenue = rawNewton.cloverRevenueAmount + rawNewton.thirdPartyRevenueAmount;
     const totalLabor = rawNewton.fohLaborAmount + rawNewton.bohLaborAmount;
     const discountVoidsTotal = rawNewton.discountsAmount + rawNewton.voidsAmount;
     const onlineSalesActual = rawNewton.onlineSalesActualAmount ?? 0;

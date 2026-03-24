@@ -48,7 +48,6 @@ export function computeTotal(rows: LocationWeeklyMetrics[]): LocationWeeklyMetri
     ...base,
     locationId: 'total',
     // --- original + computed ---
-    totalRevenueAmount: sumByKey('totalRevenueAmount'),
     weeklyCashCloverAmount: sumByKey('weeklyCashCloverAmount'),
     actualDepositAmount: sumByKey('actualDepositAmount'),
     voidsAmount: sumByKey('voidsAmount'),
@@ -62,8 +61,9 @@ export function computeTotal(rows: LocationWeeklyMetrics[]): LocationWeeklyMetri
     onlineSalesCloverAmount: sumByKey('onlineSalesCloverAmount'),
     onlineSalesActualAmount: sumByKey('onlineSalesActualAmount'),
     ghostKitchenIncomeAmount: sumByKey('ghostKitchenIncomeAmount'),
-    cloverRevenueAmount: sum(rows.map((r) => r.cloverRevenueAmount ?? 0)),
-    thirdPartyRevenueAmount: sum(rows.map((r) => r.thirdPartyRevenueAmount ?? 0)),
+    cloverRevenueAmount: sum(rows.map((r) => r.cloverRevenueAmount)),
+    thirdPartyRevenueAmount: sum(rows.map((r) => r.thirdPartyRevenueAmount)),
+    totalRevenueAmount: sum(rows.map((r) => r.cloverRevenueAmount)) + sum(rows.map((r) => r.thirdPartyRevenueAmount)),
 
     // computed
     adjustedSalesAmount: sumByKey('adjustedSalesAmount'),
@@ -90,7 +90,6 @@ export function computeAverage(total: LocationWeeklyMetrics, count: number): Loc
     locationId: 'average',
 
     // divide normal numeric fields
-    totalRevenueAmount: div(total.totalRevenueAmount),
     weeklyCashCloverAmount: div(total.weeklyCashCloverAmount),
     actualDepositAmount: div(total.actualDepositAmount),
     voidsAmount: div(total.voidsAmount),
@@ -105,8 +104,9 @@ export function computeAverage(total: LocationWeeklyMetrics, count: number): Loc
     onlineSalesCloverAmount: div(total.onlineSalesCloverAmount || 0),
     onlineSalesActualAmount: div(total.onlineSalesActualAmount),
     ghostKitchenIncomeAmount: div(total.ghostKitchenIncomeAmount || 0),
-    cloverRevenueAmount: div(total.cloverRevenueAmount ?? 0),
-    thirdPartyRevenueAmount: div(total.thirdPartyRevenueAmount ?? 0),
+    cloverRevenueAmount: div(total.cloverRevenueAmount),
+    thirdPartyRevenueAmount: div(total.thirdPartyRevenueAmount),
+    totalRevenueAmount: div(total.totalRevenueAmount),
 
     // computed
     adjustedSalesAmount: div(total.adjustedSalesAmount),

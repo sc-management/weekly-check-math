@@ -64,7 +64,8 @@ describe('applyChanges', () => {
       locationId: 'LOC1',
       weekStartDate: '2024-11-11',
       // raw 部分
-      totalRevenueAmount: 100_00,
+      cloverRevenueAmount: 100_00,
+      thirdPartyRevenueAmount: 0,
       weeklyCashCloverAmount: 0,
       actualDepositAmount: 0,
       voidsAmount: 0,
@@ -114,7 +115,7 @@ describe('applyChanges', () => {
       {
         kind: 'location-raw',
         locationId: 'LOC1',
-        field: 'totalRevenueAmount',
+        field: 'cloverRevenueAmount',
         value: 200_00,
       },
     ];
@@ -122,7 +123,7 @@ describe('applyChanges', () => {
     const result = applyWeeklyCheckChanges(current, changes);
 
     // 1️⃣ location-raw 字段被更新
-    expect(result.next.rows[0].totalRevenueAmount).toBe(200_00);
+    expect(result.next.rows[0].cloverRevenueAmount).toBe(200_00);
 
     // 2️⃣ 每个 location 都有重新算 inventorySummary & metrics
     expect(summarizeInventoryForLocationMock).toHaveBeenCalledTimes(1);

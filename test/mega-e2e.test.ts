@@ -21,7 +21,8 @@ describe('weekly-check-math mega E2E (Newton + Quincy)', () => {
     const rawNewton: LocationWeeklyRaw = {
       locationId: 'Newton',
       weekStartDate: '2024-11-10',
-      totalRevenueAmount: 15_775,
+      cloverRevenueAmount: 15_775,
+      thirdPartyRevenueAmount: 0,
       fohLaborAmount: 2_380,
       bohLaborAmount: 2_346,
       discountsAmount: 166,
@@ -33,7 +34,8 @@ describe('weekly-check-math mega E2E (Newton + Quincy)', () => {
     const rawQuincy: LocationWeeklyRaw = {
       locationId: 'Quincy',
       weekStartDate: '2024-11-10',
-      totalRevenueAmount: 21_121,
+      cloverRevenueAmount: 21_121,
+      thirdPartyRevenueAmount: 0,
       fohLaborAmount: 2_368,
       bohLaborAmount: 3_930,
       discountsAmount: 217,
@@ -105,7 +107,7 @@ describe('weekly-check-math mega E2E (Newton + Quincy)', () => {
     // ===============================
 
     // Newton 期望值（用当前 utils.percent 算，避免和实现不一致）
-    const newtonTotalRevenue = rawNewton.totalRevenueAmount;
+    const newtonTotalRevenue = rawNewton.cloverRevenueAmount + rawNewton.thirdPartyRevenueAmount;
     const newtonTotalLabor = rawNewton.fohLaborAmount + rawNewton.bohLaborAmount;
     const newtonDiscountVoids = rawNewton.discountsAmount + rawNewton.voidsAmount;
     const newtonFoodCost = 4_769 + 4_747; // summarizeInventoryForLocation 也会这么算
@@ -133,7 +135,7 @@ describe('weekly-check-math mega E2E (Newton + Quincy)', () => {
     );
 
     // Quincy 期望值
-    const quincyTotalRevenue = rawQuincy.totalRevenueAmount;
+    const quincyTotalRevenue = rawQuincy.cloverRevenueAmount + rawQuincy.thirdPartyRevenueAmount;
     const quincyTotalLabor = rawQuincy.fohLaborAmount + rawQuincy.bohLaborAmount;
     const quincyDiscountVoids = rawQuincy.discountsAmount + rawQuincy.voidsAmount;
     const quincyFoodCost = 4_825 + 6_540;
@@ -194,11 +196,11 @@ describe('weekly-check-math mega E2E (Newton + Quincy)', () => {
     // 6. 通过 applyChanges 测试对指标的动态更新
     // ===============================
 
-    // 假设运营方想把 Newton 的 revenue 从 15775 改成 20000
+    // 假设运营方想把 Newton 的 clover revenue 从 15775 改成 20000
     const change1: WeeklyChange = {
       kind: 'location-raw',
       locationId: 'Newton',
-      field: 'totalRevenueAmount',
+      field: 'cloverRevenueAmount',
       value: 20_000,
     };
 
@@ -222,7 +224,8 @@ describe('weekly-check-math mega E2E (Newton + Quincy)', () => {
 
     // ========== Newton 改 revenue 后，labor% / discount% / inventory% 应该自动变化 ==========
     const newNewton = next.rows.find((m) => m.locationId === 'Newton')!;
-    expect(newNewton.totalRevenueAmount).toBe(20_000);
+    expect(newNewton.cloverRevenueAmount).toBe(20_000);
+    expect(newNewton.totalRevenueAmount).toBe(20_000); // clover 20000 + thirdParty 0
 
     // Newton 的 labor% 在 revenue 变大后应变小
     expect(newNewton.totalLaborPercent).toBeLessThan(
