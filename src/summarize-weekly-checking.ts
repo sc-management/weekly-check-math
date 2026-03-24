@@ -104,8 +104,8 @@ export function computeAverage(total: LocationWeeklyMetrics, count: number): Loc
     onlineSalesCloverAmount: div(total.onlineSalesCloverAmount || 0),
     onlineSalesActualAmount: div(total.onlineSalesActualAmount),
     ghostKitchenIncomeAmount: div(total.ghostKitchenIncomeAmount || 0),
-    cloverRevenueAmount: div(total.cloverRevenueAmount),
-    thirdPartyRevenueAmount: div(total.thirdPartyRevenueAmount),
+    cloverRevenueAmount: div(total.cloverRevenueAmount ?? 0),
+    thirdPartyRevenueAmount: div(total.thirdPartyRevenueAmount ?? 0),
     totalRevenueAmount: div(total.totalRevenueAmount),
 
     // computed
