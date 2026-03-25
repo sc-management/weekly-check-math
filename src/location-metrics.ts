@@ -14,8 +14,8 @@ export function computeLocationWeeklyMetrics(
 
   const foodCost = inventory.foodCostAmount;
 
-  const hasCloverOrThirdParty = raw.cloverRevenueAmount != null || raw.thirdPartyRevenueAmount != null;
-  const totalRevenue = hasCloverOrThirdParty
+  const hasClover = !!(raw.cloverRevenueAmount || raw.thirdPartyRevenueAmount);
+  const totalRevenue = hasClover
     ? (raw.cloverRevenueAmount ?? 0) + (raw.thirdPartyRevenueAmount ?? 0)
     : (raw.totalRevenueAmount ?? 0);
 
